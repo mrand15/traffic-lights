@@ -1,0 +1,30 @@
+{
+  "name": "traffic-lights",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel src --out-dir public & node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrand15/traffic-lights.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrand15/traffic-lights/issues"
+  },
+  "homepage": "https://github.com/mrand15/traffic-lights#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^3.19.0",
+    "eslint-plugin-react": "^7.4.0"
+  }
+}
