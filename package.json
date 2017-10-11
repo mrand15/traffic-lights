@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel src --out-dir public & node server.js"
+    "start": "./node_modules/.bin/webpack --config webpack.config.js & node server.js"
   },
   "repository": {
     "type": "git",
@@ -18,13 +18,21 @@
   },
   "homepage": "https://github.com/mrand15/traffic-lights#readme",
   "dependencies": {
-    "express": "^4.16.2",
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.0"
+    "babel-preset-env": "^1.6.0",
+    "express": "^4.16.2",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
     "eslint": "^3.19.0",
-    "eslint-plugin-react": "^7.4.0"
+    "eslint-plugin-react": "^7.4.0",
+    "webpack": "^3.6.0"
   }
 }
