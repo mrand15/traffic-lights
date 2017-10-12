@@ -1,24 +1,37 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import Car from './components/car';
 
 import intersectionImg from './intersection.png';
-import carImg from './car.png';
 
-const startPosition = {
-  left: 400,
-  top: 1000,
-};
-
-const wait = {
-  left: 400,
-  top: 600,
-};
-
-const leftTurn = {
-  transform: 'rotate(-90deg)',
-  left: 300,
-  top: 400,
-  transition: 'all 2s linear 0s, left 2s ease-in, top 2s ease-out',
+const lanes = {
+  south: {
+    positions: {
+      start: {
+        left: 400,
+        top: 1000,
+      },
+      lights: {
+        left: 400,
+        top: 600,
+      },
+    },
+  },
+  west: {
+    positions: {
+      turn: {
+        left: 300,
+        top: 500,
+        transition: 'all 1s linear 0s, left 1s ease-in, top 1s ease-out',
+        transform: 'rotate(-90deg)',
+      },
+      finish: {
+        left: -100,
+        top: 500,
+        transform: 'rotate(-90deg)',
+      },
+    },
+  },
 };
 
 class App extends Component {
@@ -29,38 +42,33 @@ class App extends Component {
     this.state = {
       cars: [
         {
-          position: startPosition,
+          id: 'testCar',
+          positions: {
+            start: lanes.south.positions.start,
+            lights: lanes.south.positions.lights,
+            turn: lanes.west.positions.turn,
+            finish: lanes.west.positions.finish,
+          },
         }
       ],
     };
   }
 
-  componentDidMount () {
-    window.setInterval(() => {
-      const { cars } = this.state;
+  test = () => {
 
-      cars.forEach((car) => {
-
-        if (car.position.top > wait.top) {
-          car.position = wait;
-        } else {
-          car.position = leftTurn;
-        }
-        
-      });
-      this.setState(cars);
-    }, 1200);
   }
 
   render () {
 
     const { cars } = this.state;
-
     return (
       <div style={styles.intersection}>
-        {cars.map((car, i) => (
-          <div key={i} style={Object.assign({}, styles.car, car.position)}>
-          </div>
+        {cars.map((car) => (
+          <Car 
+            key={car.id} 
+            id={car.id}
+            positions={car.positions}
+          />
         ))}
       </div>
     );
@@ -73,16 +81,6 @@ const styles = {
     height: '1000px',
     width: '1000px',
     position: 'relative',
-  },
-  car: {
-    backgroundImage: `url(${carImg})`,
-    width: '100px',
-    height: '100px',
-    backgroundSize: 'contain',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
-    position: 'absolute',
-    transition: 'all 2s ease 0s',
   },
 };
 
