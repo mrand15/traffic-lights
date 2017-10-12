@@ -55,7 +55,7 @@ export default class Car extends Component {
 
   componentDidMount () {
 
-    window.setInterval(this._checkPosition, 5000);
+    window.setInterval(this._checkPosition, 500);
     
   }
 
