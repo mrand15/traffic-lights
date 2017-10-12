@@ -54,8 +54,15 @@ class App extends Component {
     };
   }
 
-  test = () => {
+  componentDidMount () {
+    
+    window.setInterval(() => {
 
+      const { lanes } = this.state;
+      const directions = ['north','south','east','west'];
+      const start = directions[Math.floor(Math.random()*directions.length)];
+
+    }, 5000);
   }
 
   render () {

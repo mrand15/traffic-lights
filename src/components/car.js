@@ -19,7 +19,7 @@ export default class Car extends Component {
       nextPostion: props.positions.start,
       status: statuses.starting,
     };
-  };
+  }
 
   _nextPosition = () => {
 
