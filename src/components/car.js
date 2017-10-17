@@ -28,8 +28,8 @@ export default class Car extends Component {
     const { startLane, endLane } = this.props;
     const { starting, atLights, turning, finishing } = statuses;
     
-    const { lights } = lanes[this.props.startLane];
-    const { turn, finish } = lanes[this.props.endLane];
+    const { lights } = lanes[startLane];
+    const { turn, finish } = lanes[endLane];
     
 
     switch (status) {
@@ -59,6 +59,25 @@ export default class Car extends Component {
     this.setState(newState);
   }
 
+  _getRotation = () => {
+
+    const { startLane, endLane } = this.props;
+    let rotation = 0;
+
+
+    if (this.state.status < statuses.turning) {
+      rotation = lanes[startLane].rotation;
+    } else {
+      rotation = (lanes[endLane].rotation + 180);
+      if ((rotation - lanes[startLane].rotation) > 90) {
+        rotation = rotation -360;
+      }
+    }
+
+
+    return { transform: `rotate(${rotation}deg)` };
+  }
+
   componentDidMount () {
     const { id } = this.props;
     //this.interval = window.setInterval(this._checkPosition, 500);
@@ -76,7 +95,7 @@ export default class Car extends Component {
     const { nextPostion } = this.state;
 
     return (
-      <div id={id} style={Object.assign({}, styles.car, nextPostion)}>
+      <div id={id} style={Object.assign({}, styles.car, nextPostion, this._getRotation())}>
       </div>
     );
   }
