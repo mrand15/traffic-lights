@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import carImg from '../car.png';
+import lanes from '../shared/lanes';
 
 const statuses = {
   starting: 0,
@@ -14,9 +15,9 @@ export default class Car extends Component {
 
   constructor (props) {
     super();
-
+    
     this.state = {
-      nextPostion: props.positions.start,
+      nextPostion: lanes[props.startLane].start,
       status: statuses.starting,
     };
   }
@@ -24,17 +25,22 @@ export default class Car extends Component {
   _nextPosition = () => {
 
     const { status } = this.state;
-    const { lights, turn, finish, rotation } = this.props.positions;
+    const { startLane, endLane } = this.props;
     const { starting, atLights, turning, finishing } = statuses;
+    
+    const { lights } = lanes[this.props.startLane];
+    const { turn, finish } = lanes[this.props.endLane];
+    
 
     switch (status) {
       case starting:
         return { nextPostion: lights, status: atLights };
       case atLights:
-        return { nextPostion: turn, status: turning, rotation };
+        return { nextPostion: turn, status: turning };
       case turning: 
         return { nextPostion: finish, status: finishing };
       case finishing:
+        this.props.finish();
         return;
     }
   }
@@ -54,9 +60,14 @@ export default class Car extends Component {
   }
 
   componentDidMount () {
+    const { id } = this.props;
+    //this.interval = window.setInterval(this._checkPosition, 500);
+    $(`#${id}`).on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', this._checkPosition);
+    this._checkPosition();
+  }
 
-    window.setInterval(this._checkPosition, 500);
-    
+  componentWillUnmount () {
+    clearInterval(this.interval);
   }
 
   render () {

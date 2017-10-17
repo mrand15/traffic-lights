@@ -4,36 +4,6 @@ import Car from './components/car';
 
 import intersectionImg from './intersection.png';
 
-const lanes = {
-  south: {
-    positions: {
-      start: {
-        left: 400,
-        top: 1000,
-      },
-      lights: {
-        left: 400,
-        top: 600,
-      },
-    },
-  },
-  west: {
-    positions: {
-      turn: {
-        left: 300,
-        top: 500,
-        transition: 'all 1s linear 0s, left 1s ease-in, top 1s ease-out',
-        transform: 'rotate(-90deg)',
-      },
-      finish: {
-        left: -100,
-        top: 500,
-        transform: 'rotate(-90deg)',
-      },
-    },
-  },
-};
-
 class App extends Component {
 
   constructor () {
@@ -42,27 +12,56 @@ class App extends Component {
     this.state = {
       cars: [
         {
-          id: 'testCar',
+          id: 1,
+          startLane: 'south',
+          endLane: 'west',
+          /*
           positions: {
             start: lanes.south.positions.start,
             lights: lanes.south.positions.lights,
             turn: lanes.west.positions.turn,
             finish: lanes.west.positions.finish,
-          },
+          },*/
         }
       ],
     };
+
+    this.carCount = 1;
   }
 
   componentDidMount () {
-    
+        
     window.setInterval(() => {
 
-      const { lanes } = this.state;
+      const { cars } = this.state;
       const directions = ['north','south','east','west'];
       const start = directions[Math.floor(Math.random()*directions.length)];
+      const endings = directions.filter(direction => direction !== start);
+      const end = endings[Math.floor(Math.random()*endings.length)];
 
-    }, 5000);
+      
+      this.carCount++;
+
+      const newCar = {
+        id: this.carCount,
+        startLane: start,
+        endLane: end,
+      };
+
+      const newCars = [
+        ...cars,
+        newCar
+      ];
+
+      this.setState({ cars: newCars });
+
+    }, 1000);
+  }
+
+  _removeCar = (id) => {
+    const { cars } = this.state;
+    const newCars = cars.filter(car => car.id !== id);
+    this.setState({ cars: newCars });
   }
 
   render () {
@@ -74,7 +73,9 @@ class App extends Component {
           <Car 
             key={car.id} 
             id={car.id}
-            positions={car.positions}
+            startLane={car.startLane}
+            endLane={car.endLane}
+            finish={() => this._removeCar(car.id)}
           />
         ))}
       </div>
