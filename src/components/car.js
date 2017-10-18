@@ -11,6 +11,13 @@ const statuses = {
   finished: 5,
 };
 
+const directions = {
+  north: 0,
+  east: 1,
+  south: 2,
+  west: 3,
+};
+
 export default class Car extends Component {
 
   constructor (props) {
@@ -46,7 +53,7 @@ export default class Car extends Component {
   }
 
   _checkPosition = () => {
-
+    
     const { id } = this.props;
     let { nextPostion } = this.state;
 
@@ -74,19 +81,45 @@ export default class Car extends Component {
       }
     }
 
-
     return { transform: `rotate(${rotation}deg)` };
+  }
+
+  _getTransition = () => {
+
+    const { startLane, endLane } = this.props;
+    let transition = 'all 2s linear 0s';
+
+    if (this.state.status === statuses.turning) {
+      if ((directions[startLane] + directions[endLane]) % 2 === 0) {
+        transition = 'all 1.5s linear 0s';
+      } else {
+
+        let speed = '2s';
+        if (((directions[startLane] + 1) % 4) == directions[endLane]) {
+          speed = '1s';
+        }
+
+        switch (endLane) {
+          case 'north' :
+          case 'south' :
+            transition = `transform ${speed} linear 0s, left ${speed} ease-out, top ${speed} ease-in`;
+            break;
+          case 'east' :
+          case 'west' :
+            transition = `transform ${speed} linear 0s, left ${speed} ease-in, top ${speed} ease-out`;
+            break;
+        }
+
+      }
+    }
+
+    return { transition: transition };
   }
 
   componentDidMount () {
     const { id } = this.props;
-    //this.interval = window.setInterval(this._checkPosition, 500);
     $(`#${id}`).on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', this._checkPosition);
     this._checkPosition();
-  }
-
-  componentWillUnmount () {
-    clearInterval(this.interval);
   }
 
   render () {
@@ -95,7 +128,7 @@ export default class Car extends Component {
     const { nextPostion } = this.state;
 
     return (
-      <div id={id} style={Object.assign({}, styles.car, nextPostion, this._getRotation())}>
+      <div id={id} style={Object.assign({}, styles.car, nextPostion, this._getRotation(), this._getTransition())}>
       </div>
     );
   }
@@ -110,6 +143,6 @@ const styles = {
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center center',
     position: 'absolute',
-    transition: 'all 2s linear 0s',
+    //transition: 'all 2s linear 0s',
   },
 };

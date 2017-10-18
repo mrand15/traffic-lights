@@ -11,7 +11,6 @@ const lanes = {
     turn: {
       left: 500,
       top: 600,
-      transition: 'all 1s linear 0s, left 1s ease-out, top 1s ease-in',
     }, 
     finish: {
       left: 500,
@@ -31,7 +30,6 @@ const lanes = {
     turn: {
       left: 300,
       top: 500,
-      transition: 'all 1s linear 0s, left 1s ease-in, top 1s ease-out',
     },
     finish: {
       left: -100,
@@ -51,7 +49,6 @@ const lanes = {
     turn: {
       left: 600,
       top: 400,
-      transition: 'all 1s linear 0s, left 1s ease-in, top 1s ease-out',
     },
     finish: {
       left: 1000,
@@ -71,7 +68,6 @@ const lanes = {
     turn: {
       left: 400,
       top: 300,
-      transition: 'all 1s linear 0s, left 1s ease-out, top 1s ease-in',
     },
     finish: {
       left: 400,
