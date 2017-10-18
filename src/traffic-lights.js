@@ -29,33 +29,39 @@ class App extends Component {
     this.carCount = 1;
   }
 
+  _addCar = () => {
+    const { cars } = this.state;
+    const directions = ['north','south','east','west'];
+    const start = directions[Math.floor(Math.random()*directions.length)];
+    const endings = directions.filter(direction => direction !== start);
+    const end = endings[Math.floor(Math.random()*endings.length)];
+
+    
+    this.carCount++;
+
+    const newCar = {
+      id: this.carCount,
+      startLane: start,
+      endLane: end,
+    };
+
+    const newCars = [
+      ...cars,
+      newCar
+    ];
+
+    this.setState({ cars: newCars });
+  }
+
+  _carTimeout = () => {
+    window.setTimeout(() => {
+      this._addCar();
+      this._carTimeout();
+    }, Math.floor(Math.random() * 2000) + 500);
+  }
+
   componentDidMount () {
-        
-    window.setInterval(() => {
-
-      const { cars } = this.state;
-      const directions = ['north','south','east','west'];
-      const start = directions[Math.floor(Math.random()*directions.length)];
-      const endings = directions.filter(direction => direction !== start);
-      const end = endings[Math.floor(Math.random()*endings.length)];
-
-      
-      this.carCount++;
-
-      const newCar = {
-        id: this.carCount,
-        startLane: start,
-        endLane: end,
-      };
-
-      const newCars = [
-        ...cars,
-        newCar
-      ];
-
-      this.setState({ cars: newCars });
-
-    }, 1000);
+    this._carTimeout();
   }
 
   _removeCar = (id) => {
