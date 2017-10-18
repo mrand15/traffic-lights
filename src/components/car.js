@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import carImg from '../car.png';
+import carImg from '../images/car.png';
 import lanes from '../shared/lanes';
 
 const statuses = {

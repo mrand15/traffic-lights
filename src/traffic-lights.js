@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Car from './components/car';
+import Car from './components/Car';
+import TrafficLight from './components/TrafficLight';
 
-import intersectionImg from './intersection.png';
+import intersectionImg from './images/intersection.png';
 
 class App extends Component {
 
@@ -10,20 +11,13 @@ class App extends Component {
     super();
 
     this.state = {
-      cars: [
-        {
-          id: 1,
-          startLane: 'south',
-          endLane: 'west',
-          /*
-          positions: {
-            start: lanes.south.positions.start,
-            lights: lanes.south.positions.lights,
-            turn: lanes.west.positions.turn,
-            finish: lanes.west.positions.finish,
-          },*/
-        }
-      ],
+      cars: [],
+      lights: {
+        north: 'green',
+        south: 'green',
+        east: 'green',
+        west: 'green',
+      },
     };
 
     this.carCount = 1;
@@ -72,7 +66,7 @@ class App extends Component {
 
   render () {
 
-    const { cars } = this.state;
+    const { cars, lights } = this.state;
     return (
       <div style={styles.intersection}>
         {cars.map((car) => (
@@ -82,6 +76,13 @@ class App extends Component {
             startLane={car.startLane}
             endLane={car.endLane}
             finish={() => this._removeCar(car.id)}
+          />
+        ))}
+        {Object.keys(lights).map(light => (
+          <TrafficLight
+            key={light}
+            direction={light}
+            status={lights[light]}
           />
         ))}
       </div>
