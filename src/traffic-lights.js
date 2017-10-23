@@ -14,9 +14,9 @@ class App extends Component {
       cars: [],
       lights: {
         north: 'green',
-        south: 'green',
-        east: 'green',
-        west: 'green',
+        south: 'red',
+        east: 'red',
+        west: 'red',
       },
     };
 
@@ -24,19 +24,24 @@ class App extends Component {
   }
 
   _addCar = () => {
-    const { cars } = this.state;
+    const { cars, lights } = this.state;
     const directions = ['north','south','east','west'];
     const start = directions[Math.floor(Math.random()*directions.length)];
     const endings = directions.filter(direction => direction !== start);
     const end = endings[Math.floor(Math.random()*endings.length)];
 
+    if (lights[start] !== 'green' && cars.filter(car => car.startLane === start ).length > 3 ) return;
     
     this.carCount++;
-
+    
+    const reversed = [...cars].reverse();
+    const inFront =reversed.find(car => car.startLane === start);
+    //console.log(inFront);
     const newCar = {
       id: this.carCount,
       startLane: start,
       endLane: end,
+      inFront: inFront ? inFront.id : null,
     };
 
     const newCars = [
@@ -76,6 +81,8 @@ class App extends Component {
             startLane={car.startLane}
             endLane={car.endLane}
             finish={() => this._removeCar(car.id)}
+            light={lights[car.startLane]}
+            inFront={car.inFront}
           />
         ))}
         {Object.keys(lights).map(light => (

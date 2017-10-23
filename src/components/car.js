@@ -29,27 +29,52 @@ export default class Car extends Component {
     };
   }
 
+  _queuePosition = () => {
+
+    const { startLane, endLane, light, inFront } = this.props;
+
+    if (inFront && light !== 'green') {
+      const { left, top } = $(`#${inFront}`).position();
+      let nextPostion = { left, top };
+      switch (startLane) {
+        case 'north': 
+          nextPostion.top -= 125;
+          break;
+        case 'south':
+          nextPostion.top += 125;
+          break;
+        case 'east':
+          nextPostion.left += 125;
+          break;
+        case 'west':
+          nextPostion.left -= 125;
+          break;
+      }
+      return { nextPostion, status: statuses.stopped };
+    }
+  }
+
   _nextPosition = () => {
 
     const { status } = this.state;
-    const { startLane, endLane } = this.props;
-    const { starting, atLights, turning, finishing } = statuses;
-    
+    const { startLane, endLane, light, inFront } = this.props;
+    const { starting, atLights, turning, finishing, stopped } = statuses;
     const { lights } = lanes[startLane];
     const { turn, finish } = lanes[endLane];
-    
 
     switch (status) {
       case starting:
+      if (inFront && light !== 'green') return this._queuePosition();
         return { nextPostion: lights, status: atLights };
       case atLights:
+        if (light !== 'green') return null;
         return { nextPostion: turn, status: turning };
       case turning: 
         return { nextPostion: finish, status: finishing };
       case finishing:
         this.props.finish();
-        return;
     }
+    return null;
   }
 
   _checkPosition = () => {
@@ -59,11 +84,11 @@ export default class Car extends Component {
 
     const { left, top } = $(`#${id}`).position();
 
-    if (left !== nextPostion.left ||  top !== nextPostion.top) return;
+    if (left !== nextPostion.left || top !== nextPostion.top) return;
 
     let newState = this._nextPosition();
 
-    this.setState(newState);
+    if (newState) this.setState(newState);
   }
 
   _getRotation = () => {
@@ -86,10 +111,13 @@ export default class Car extends Component {
 
   _getTransition = () => {
 
-    const { startLane, endLane } = this.props;
+    const { startLane, endLane, light } = this.props;
     let transition = 'all 2s linear 0s';
 
-    if (this.state.status === statuses.turning) {
+
+    if (this.state.status === statuses.atLights) {
+      if (light !== 'green') transition = 'all 2.5s ease-out 0s';
+    } else if (this.state.status === statuses.turning) {
       if ((directions[startLane] + directions[endLane]) % 2 === 0) {
         transition = 'all 1.5s linear 0s';
       } else {
